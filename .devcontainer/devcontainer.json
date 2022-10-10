@@ -25,7 +25,13 @@
 				"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
 				"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
 				"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
-				"python.testing.pytestPath": "/usr/local/py-utils/bin/pytest"
+				"python.testing.pytestPath": "/usr/local/py-utils/bin/pytest",
+				"files.associations": {
+					"*.spec": "gauge",
+					"*.cpt": "gauge"
+				},
+				"files.autoSave": "afterDelay",
+				"files.autoSaveDelay": 500
 			},
 			
 			// Add the IDs of extensions you want installed when the container is created.
@@ -33,7 +39,8 @@
 				"ms-python.python",
 				"ms-python.vscode-pylance",
 				"ckolkman.vscode-postgres",
-				"timonwong.shellcheck"
+				"timonwong.shellcheck",
+				"getgauge.gauge"
 			]
 		}
 	},
@@ -50,7 +57,10 @@
 		"LIQUIBASE_HEADLESS": "true",
 		"LIQUIBASE_HUB_MODE": "off",
 		"LIQUIBASE_CHANGELOG_FILE": "dbchangelog.xml",
-		"LIQUIBASE_STRICT": "true"
+		"LIQUIBASE_STRICT": "true",
+		// Temporary workaround for https://github.com/getgauge/gauge-python/issues/256
+		// See: https://github.com/protocolbuffers/protobuf/issues/10051#issuecomment-1138671075
+		"PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION": "python"
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -58,7 +68,7 @@
 	"forwardPorts": [5432],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "scripts/create_database.sh &&  scripts/liquibase_update.sh",
+	"postCreateCommand": "scripts/create_database.sh && scripts/liquibase_update.sh",
 
 	"features": {
 		"java": "lts"

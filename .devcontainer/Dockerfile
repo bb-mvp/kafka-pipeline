@@ -38,3 +38,9 @@ RUN export LIQUIBASE_BUNDLE=liquibase-${LIQUIBASE_VERSION}.zip \
     && cp -r ${LIQUIBASE_DOWNLOAD_DIR}/. ${LIQUIBASE_INSTALL_DIR} \
     && chmod +x ${LIQUIBASE_INSTALL_DIR}liquibase \
     && rm -rf ${LIQUIBASE_DOWNLOAD_DIR}
+
+# Install Gauge
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN curl -SsL https://downloads.gauge.org/stable | sh \
+    && su vscode -c "gauge install python" \
+    && su vscode -c "gauge install html-report"
