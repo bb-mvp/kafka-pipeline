@@ -1,38 +1,42 @@
-from getgauge.python import step, before_scenario, Messages
-
-vowels = ["a", "e", "i", "o", "u"]
-
-
-def number_of_vowels(word):
-    return len([elem for elem in list(word) if elem in vowels])
+import os
+import random
+import time
+from getgauge.python import step
+import psycopg2
 
 
-# --------------------------
-# Gauge step implementations
-# --------------------------
-
-@step("The word <word> has <number> vowels.")
-def assert_no_of_vowels_in(word, number):
-    assert str(number) == str(number_of_vowels(word))
+def end_time(duration):
+    return time.time() + int(duration)
 
 
-@step("Vowels in English language are <vowels>.")
-def assert_default_vowels(given_vowels):
-    Messages.write_message("Given vowels are {0}".format(given_vowels))
-    assert given_vowels == "".join(vowels)
+def connection():
+    return psycopg2.connect(
+        host=os.environ.get('PGHOST'),
+        database=os.environ.get('DATABASE_NAME'),
+        user=os.environ.get('LIQUIBASE_COMMAND_USERNAME'),
+        password=os.environ.get('LIQUIBASE_COMMAND_PASSWORD'))
+
+def random_amount():
+    return random.randint(1, 100000)/100
 
 
-@step("Almost all words have vowels <table>")
-def assert_words_vowel_count(table):
-    actual = [str(number_of_vowels(word)) for word in table.get_column_values_with_name("Word")]
-    expected = [str(count) for count in table.get_column_values_with_name("Vowel Count")]
-    assert expected == actual
-
-
-# ---------------
-# Execution Hooks
-# ---------------
-
-@before_scenario()
-def before_scenario_hook():
-    assert "".join(vowels) == "aeiou"
+@step("Add a transaction every <frequency> seconds for <duration> seconds")
+def add_transactions(frequency, duration):
+    print("Adding transactions . . ")
+    sql = """INSERT INTO transactions(amount, time)
+             VALUES(%s, now()) RETURNING id;"""
+    conn = None
+    try:
+        conn = connection()
+        cur = conn.cursor()
+        t_end = end_time(duration)
+        while time.time() < t_end:
+            cur.execute(sql, (random_amount(),))
+            time.sleep(int(frequency))
+        conn.commit()
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
