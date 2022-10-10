@@ -57,7 +57,7 @@
 	"forwardPorts": [5432],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip install --user -r requirements.txt",
+	"postCreateCommand": "scripts/create_database.sh &&  scripts/liquibase_update.sh",
 
 	"features": {
 		"java": "lts"
