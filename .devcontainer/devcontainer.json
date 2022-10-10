@@ -18,6 +18,7 @@
 				"python.linting.pylintEnabled": true,
 				"python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
 				"python.formatting.blackPath": "/usr/local/py-utils/bin/black",
+				"python.formatting.provider": "black",
 				"python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
 				"python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
 				"python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
@@ -26,6 +27,7 @@
 				"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
 				"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
 				"python.testing.pytestPath": "/usr/local/py-utils/bin/pytest",
+				"editor.formatOnSave": true,
 				"files.associations": {
 					"*.spec": "gauge",
 					"*.cpt": "gauge"

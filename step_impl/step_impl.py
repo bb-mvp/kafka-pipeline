@@ -11,13 +11,15 @@ def end_time(duration):
 
 def connection():
     return psycopg2.connect(
-        host=os.environ.get('PGHOST'),
-        database=os.environ.get('DATABASE_NAME'),
-        user=os.environ.get('LIQUIBASE_COMMAND_USERNAME'),
-        password=os.environ.get('LIQUIBASE_COMMAND_PASSWORD'))
+        host=os.environ.get("PGHOST"),
+        database=os.environ.get("DATABASE_NAME"),
+        user=os.environ.get("LIQUIBASE_COMMAND_USERNAME"),
+        password=os.environ.get("LIQUIBASE_COMMAND_PASSWORD"),
+    )
+
 
 def random_amount():
-    return random.randint(1, 100000)/100
+    return random.randint(1, 100000) / 100
 
 
 @step("Add a transaction every <frequency> seconds for <duration> seconds")
@@ -35,7 +37,7 @@ def add_transactions(frequency, duration):
             time.sleep(int(frequency))
         conn.commit()
         cur.close()
-    except (Exception, psycopg2.DatabaseError) as error:
+    except (psycopg2.DatabaseError) as error:
         print(error)
     finally:
         if conn is not None:
