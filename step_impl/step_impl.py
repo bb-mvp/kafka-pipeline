@@ -11,10 +11,10 @@ def end_time(duration):
 
 def connection():
     return psycopg2.connect(
-        host=os.environ.get("PGHOST"),
+        host=os.environ.get("DATABASE_HOST"),
         database=os.environ.get("DATABASE_NAME"),
-        user=os.environ.get("LIQUIBASE_COMMAND_USERNAME"),
-        password=os.environ.get("LIQUIBASE_COMMAND_PASSWORD"),
+        user=os.environ.get("DATABASE_USERNAME"),
+        password=os.environ.get("DATABASE_PASSWORD"),
     )
 
 
