@@ -8,5 +8,5 @@ liquibase \
   update \
   --changelog-file="$LIQUIBASE_CHANGELOG_FILE" \
   --url="$LIQUIBASE_COMMAND_URL" \
-  --username="$LIQUIBASE_COMMAND_USERNAME" \
-  --password="$LIQUIBASE_COMMAND_PASSWORD" \
+  --username="$DATABASE_USERNAME" \
+  --password="$DATABASE_PASSWORD" \

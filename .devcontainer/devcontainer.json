@@ -6,13 +6,12 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-
 	// Configure tool-specific properties.
 	"customizations": {
 		// Configure properties specific to VS Code.
 		"vscode": {
 			// Set *default* container specific settings.json values on container create.
-			"settings": { 
+			"settings": {
 				"python.defaultInterpreterPath": "/usr/local/bin/python",
 				"python.linting.enabled": true,
 				"python.linting.pylintEnabled": true,
@@ -35,7 +34,6 @@
 				"files.autoSave": "afterDelay",
 				"files.autoSaveDelay": 500
 			},
-			
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"ms-python.python",
@@ -46,15 +44,21 @@
 			]
 		}
 	},
-
+	"containerEnv": {
+		"DATABASE_NAME": "transactions",
+		"DATABASE_HOST": "localhost",
+		"DATABASE_USERNAME": "postgres",
+		"DATABASE_PASSWORD": "postgres",
+		"DATABASE_PORT": "5432"
+	},
 	"remoteEnv": {
 		"PATH": "${containerEnv:PATH}:/usr/local/bin/liquibase",
-		"PGUSER": "postgres",
-		"PGHOST": "localhost",
-		"DATABASE_NAME": "transactions",
-		"LIQUIBASE_COMMAND_USERNAME": "postgres",
-		"LIQUIBASE_COMMAND_PASSWORD": "postgres",
-		"LIQUIBASE_COMMAND_URL": "jdbc:postgresql://localhost:5432/transactions",
+		"PGUSER": "${containerEnv:DATABASE_USERNAME}",
+		"PGHOST": "${containerEnv:DATABASE_HOST}",
+		"DATABASE_NAME": "${containerEnv:DATABASE_NAME}",
+		"DATABASE_USERNAME": "${containerEnv:DATABASE_USERNAME}",
+		"DATABASE_PASSWORD": "${containerEnv:DATABASE_PASSWORD}",
+		"LIQUIBASE_COMMAND_URL": "jdbc:postgresql://${containerEnv:DATABASE_HOST}:${containerEnv:DATABASE_PORT}/${containerEnv:DATABASE_NAME}",
 		"LIQUIBASE_CLASSPATH": "/usr/local/bin/liquibase/internal/lib/postgresql.jar",
 		"LIQUIBASE_HEADLESS": "true",
 		"LIQUIBASE_HUB_MODE": "off",
@@ -64,18 +68,16 @@
 		// See: https://github.com/protocolbuffers/protobuf/issues/10051#issuecomment-1138671075
 		"PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION": "python"
 	},
-
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// This can be used to network with other containers or the host.
-	"forwardPorts": [5432],
-
+	"forwardPorts": [
+		5432
+	],
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "pip3 install --user -r requirements.txt && scripts/create_database.sh && scripts/liquibase_update.sh",
-
 	"features": {
 		"java": "lts"
 	},
-
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode"
 }
