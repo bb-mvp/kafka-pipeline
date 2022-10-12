@@ -1,0 +1,29 @@
+on: workflow_dispatch
+
+jobs:
+  liquibase-action:
+    runs-on: ubuntu-latest
+    name: Add transactions
+    steps:
+      - uses: actions/checkout@v2
+      - name: install Liquibase
+        working-directory: ./bin
+        run: |
+          export LIQUIBASE_VERSION=4.16.1 && export LIQUIBASE_BUNDLE=liquibase-${LIQUIBASE_VERSION}.zip
+          wget -q https://github.com/liquibase/liquibase/releases/download/v${LIQUIBASE_VERSION}/${LIQUIBASE_BUNDLE}
+          echo "${GITHUB_WORKSPACE}/bin" >> $GITHUB_PATH
+          unzip ${LIQUIBASE_BUNDLE}
+          chmod +x liquibase
+      - name: check liquibase install
+        run: liquibase --version
+      - name: run liquibase update
+        env:
+          LIQUIBASE_CLASSPATH: "bin/internal/lib/postgresql.jar"
+          LIQUIBASE_HUB_MODE: "off"
+          LIQUIBASE_STRICT: "true"
+          LIQUIBASE_HEADLESS: "true"
+          LIQUIBASE_CHANGELOG_FILE: "dbchangelog.xml"
+          LIQUIBASE_COMMAND_URL: ${{ secrets.LIQUIBASE_COMMAND_URL }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        run: ./scripts/liquibase_update.sh
