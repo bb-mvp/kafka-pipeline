@@ -8,6 +8,7 @@ jobs:
     name: Add transactions
     steps:
       - uses: actions/checkout@v2
+      
       - name: install Liquibase
         working-directory: ./bin
         run: |
@@ -16,8 +17,26 @@ jobs:
           echo "${GITHUB_WORKSPACE}/bin" >> $GITHUB_PATH
           unzip ${LIQUIBASE_BUNDLE}
           chmod +x liquibase
+      
       - name: check liquibase install
         run: liquibase --version
+      
+      - name: Install Gauge
+        uses: getgauge/setup-gauge@master
+        with:
+          gauge-version: master
+          gauge-plugins: python, html-report, screenshot
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
       - name: run liquibase update
         env:
           LIQUIBASE_CLASSPATH: "bin/internal/lib/postgresql.jar"
@@ -29,3 +48,14 @@ jobs:
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
         run: ./scripts/liquibase_update.sh
+
+      - name: Add transactions via Gauge spec
+        env:
+          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          # Temporary workaround for https://github.com/getgauge/gauge-python/issues/256
+          PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
+        run: gauge run specs
+
