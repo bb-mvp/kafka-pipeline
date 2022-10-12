@@ -25,7 +25,9 @@ def random_amount():
 
 @step("Add a transaction every <frequency> seconds for <duration> seconds")
 def add_transactions(frequency, duration):
-    print("Adding transactions . . ")
+    print(
+        f"Adding a transaction every {frequency} seconds for {duration} seconds . . ."
+    )
     sql = """INSERT INTO transactions(amount, time)
              VALUES(%s, now()) RETURNING id;"""
     conn = None
@@ -45,3 +47,4 @@ def add_transactions(frequency, duration):
         if conn is not None:
             conn.close()
         assert error is None, error
+        print("Done")
