@@ -3,6 +3,7 @@ import random
 import time
 from getgauge.python import step
 import psycopg2
+from psycopg2 import Error
 
 
 def end_time(duration):
@@ -28,6 +29,7 @@ def add_transactions(frequency, duration):
     sql = """INSERT INTO transactions(amount, time)
              VALUES(%s, now()) RETURNING id;"""
     conn = None
+    error = None
     try:
         conn = connection()
         cur = conn.cursor()
@@ -37,8 +39,9 @@ def add_transactions(frequency, duration):
             time.sleep(int(frequency))
         conn.commit()
         cur.close()
-    except (psycopg2.DatabaseError) as error:
-        print(error)
+    except (Exception, Error) as err:
+        error = err
     finally:
         if conn is not None:
             conn.close()
+        assert error is None, error
