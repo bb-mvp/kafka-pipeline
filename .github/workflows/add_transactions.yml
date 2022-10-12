@@ -1,3 +1,5 @@
+name: Add transactions
+run-name: Add transactions (triggered by @${{ github.actor }})
 on: workflow_dispatch
 
 jobs:
