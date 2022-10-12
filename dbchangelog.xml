@@ -14,18 +14,4 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet  author="johnboyes"  id="2">  
-    <insert tableName="transactions">  
-        <column name="amount"  value="143.89"/>
-        <column name="time" value="${now}"/>  
-    </insert>
-    <insert tableName="transactions">  
-        <column name="amount"  value="19.27"/>
-        <column name="time" value="${now}"/>  
-    </insert>  
-    <insert tableName="transactions">  
-        <column name="amount"  value="50.00"/>
-        <column name="time" value="${now}"/>  
-    </insert>  
-</changeSet>
 </databaseChangeLog>
