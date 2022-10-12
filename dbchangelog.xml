@@ -6,7 +6,7 @@
             <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="transactions_pkey"/>
             </column>
-            <column name="amount" type="MONEY">
+            <column name="amount" type="DECIMAL(12, 2)">
                 <constraints nullable="false"/>
             </column>
             <column name="time" type="TIMESTAMP WITHOUT TIME ZONE">
