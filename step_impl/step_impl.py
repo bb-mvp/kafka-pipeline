@@ -30,6 +30,7 @@ def random_tran_id():
 
 def random_currency():
     list_currency = ["RON", "EUR", "USD"]
+    return random.choice(list_currency)
 
 
 def random_debit_credit():
