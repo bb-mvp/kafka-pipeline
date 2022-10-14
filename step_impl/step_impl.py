@@ -1,4 +1,3 @@
-from doctest import debug
 import os
 import random
 import time
@@ -57,9 +56,6 @@ def add_transactions(frequency, duration):
     print(
         f"Adding a transaction every {frequency} seconds for {duration} seconds . . ."
     )
-
-    # sql = """INSERT INTO transactions(amount, time)
-    #         VALUES(%s, now()) RETURNING id;"""
 
     sql = """INSERT INTO transaction(
              transaction_id, type, type_group, description, booking_date, credit_debit, transaction_currency,amount, status, customer_id, source_account, destination_account)
