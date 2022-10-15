@@ -6,6 +6,12 @@ jobs:
   liquibase-action:
     runs-on: ubuntu-latest
     name: Add transactions
+    env:
+      DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+      DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
     steps:
       - uses: actions/checkout@v2
       
@@ -44,22 +50,11 @@ jobs:
           LIQUIBASE_STRICT: "true"
           LIQUIBASE_HEADLESS: "true"
           LIQUIBASE_CHANGELOG_FILE: "dbchangelog.xml"
-          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-
 
         run: ./scripts/liquibase_update.sh
 
       - name: Add transactions via Gauge spec
         env:
-          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           # Temporary workaround for https://github.com/getgauge/gauge-python/issues/256
           PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
         run: gauge run specs
-
