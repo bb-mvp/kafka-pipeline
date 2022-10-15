@@ -10,7 +10,7 @@ on:
 
 
 jobs:
-  add-aws-transactions:
+  add-elephantsql-transactions:
     uses: ./.github/workflows/add_transactions.yml
     with:
       environment: ${{ inputs.github-username }}
