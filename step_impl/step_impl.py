@@ -16,6 +16,7 @@ def connection():
         database=os.environ.get("DATABASE_NAME"),
         user=os.environ.get("DATABASE_USERNAME"),
         password=os.environ.get("DATABASE_PASSWORD"),
+        port=os.environ.get("DATABASE_PORT"),
     )
 
 
