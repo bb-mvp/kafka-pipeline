@@ -1,17 +1,29 @@
 name: Add transactions
 run-name: Add transactions (triggered by @${{ github.actor }})
-on: workflow_dispatch
+on:
+  workflow_call:
+    secrets:
+      database-host:
+          required: true
+      database-name:
+          required: true
+      database-username:
+          required: true
+      database-password:
+          required: true
+      database-port:
+          required: true
 
 jobs:
   liquibase-action:
     runs-on: ubuntu-latest
     name: Add transactions
     env:
-      DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-      DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-      DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-      DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+      DATABASE_HOST: ${{ secrets.database-host }}
+      DATABASE_NAME: ${{ secrets.database-name }}
+      DATABASE_USERNAME: ${{ secrets.database-username }}
+      DATABASE_PASSWORD: ${{ secrets.database-password }}
+      DATABASE_PORT: ${{ secrets.database-port }}
     steps:
       - uses: actions/checkout@v2
       
