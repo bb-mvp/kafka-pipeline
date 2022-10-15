@@ -23,13 +23,43 @@ def random_amount():
     return random.randint(1, 100000) / 100
 
 
+def random_tran_id():
+    return random.randint(1, 100000000)
+
+
+def random_currency():
+    list_currency = ["RON", "EUR", "USD"]
+    return random.choice(list_currency)
+
+
+def random_debit_credit():
+    list_d_c = ["D", "C"]
+    return random.choice(list_d_c)
+
+
+def random_tran_status():
+    list_statuses = ["Pending", "Processed"]
+    return random.choice(list_statuses)
+
+
+def random_iban():
+    list_ibans = [
+        "RO30BRDE450SV22222200002",
+        "RO73BRDE450SV22222200004",
+        "RO44BRDE450CR22222200010",
+    ]
+    return random.choice(list_ibans)
+
+
 @step("Add a transaction every <frequency> seconds for <duration> seconds")
 def add_transactions(frequency, duration):
     print(
         f"Adding a transaction every {frequency} seconds for {duration} seconds . . ."
     )
-    sql = """INSERT INTO transactions(amount, time)
-             VALUES(%s, now()) RETURNING id;"""
+
+    sql = """INSERT INTO transaction(
+             transaction_id, type, type_group, description, booking_date, credit_debit, transaction_currency,amount, status, customer_id, source_account, destination_account)
+             VALUES (%s, 'ATM', 'ATM', 'Description for ', CURRENT_DATE, %s, %s, %s,%s, '22222200', 'RO57BRDE450SV22222200001', %s);"""
     conn = None
     error = None
     try:
@@ -37,7 +67,17 @@ def add_transactions(frequency, duration):
         cur = conn.cursor()
         t_end = end_time(duration)
         while time.time() < t_end:
-            cur.execute(sql, (random_amount(),))
+            cur.execute(
+                sql,
+                (
+                    random_tran_id(),
+                    random_debit_credit(),
+                    random_currency(),
+                    random_amount(),
+                    random_tran_status(),
+                    random_iban(),
+                ),
+            )
             time.sleep(int(frequency))
         conn.commit()
         cur.close()
