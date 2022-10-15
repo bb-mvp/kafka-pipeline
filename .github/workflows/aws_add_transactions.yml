@@ -5,7 +5,7 @@ on:
     inputs:
       github-username:
         description: 'Your GitHub username (for secrets from corresponding GitHub environment)'
-        required: true 
+        required: true
         type: string
 
 jobs:
