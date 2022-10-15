@@ -44,9 +44,13 @@ jobs:
           LIQUIBASE_STRICT: "true"
           LIQUIBASE_HEADLESS: "true"
           LIQUIBASE_CHANGELOG_FILE: "dbchangelog.xml"
-          LIQUIBASE_COMMAND_URL: ${{ secrets.LIQUIBASE_COMMAND_URL }}
+          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+
+
         run: ./scripts/liquibase_update.sh
 
       - name: Add transactions via Gauge spec
