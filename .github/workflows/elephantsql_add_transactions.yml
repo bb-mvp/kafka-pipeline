@@ -1,10 +1,19 @@
 name: Add transactions on ElephantSQL
 run-name: Add transactions on ElephantSQL (triggered by @${{ github.actor }})
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      github-username:
+        description: 'Your GitHub username (for secrets from corresponding GitHub environment)'
+        required: true 
+        type: string
+
 
 jobs:
   add-aws-transactions:
     uses: ./.github/workflows/add_transactions.yml
+    with:
+      environment: ${{ inputs.github-username }}
     secrets:
       database-host: ${{ secrets.ELEPHANTSQL_DATABASE_HOST }}
       database-name: ${{ secrets.ELEPHANTSQL_DATABASE_NAME }}
