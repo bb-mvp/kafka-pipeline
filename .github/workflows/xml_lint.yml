@@ -1,0 +1,19 @@
+name: Lint
+
+on: push
+
+jobs:
+  xml-linters:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Download Liquibase default XSD schema
+        run: wget https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+
+      - name: Lint Liquibase XML Changelog
+        uses: ChristophWurst/xmllint-action@v1
+        with:
+          xml-file: ./dbchangelog.xml
+          xml-schema-file: ./dbchangelog-latest.xsd
