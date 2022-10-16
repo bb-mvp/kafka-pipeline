@@ -40,7 +40,8 @@
 				"ms-python.vscode-pylance",
 				"ckolkman.vscode-postgres",
 				"timonwong.shellcheck",
-				"getgauge.gauge"
+				"getgauge.gauge",
+				"redhat.vscode-xml"
 			]
 		}
 	},
