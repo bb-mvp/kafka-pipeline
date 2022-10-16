@@ -16,32 +16,38 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 
 # Use the PostgreSQL apt repository to install Postgres command line tools (see https://www.postgresql.org/download/linux/debian/)
 # Create the file repository configuration:
-RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' \
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
 # Import the repository signing key:
-    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 
 # [Optional] Uncomment this section to install additional OS packages.
 ARG POSTGRES_VERSION="14"
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends postgresql-client-${POSTGRES_VERSION}
+    && apt-get -y install --no-install-recommends postgresql-client-${POSTGRES_VERSION} \
+
+# Clean up apt-get as per https://github.com/hadolint/hadolint/wiki/DL3009
+    && apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Liquibase
 ARG LIQUIBASE_VERSION=4.16.1
-ARG LIQUIBASE_DOWNLOAD_DIR=/tmp/liquibase
+ARG LIQUIBASE_DOWNLOAD_DIR=/tmp/liquibase/
 ARG LIQUIBASE_INSTALL_DIR=/usr/local/bin/liquibase/
 RUN export LIQUIBASE_BUNDLE=liquibase-${LIQUIBASE_VERSION}.zip \
     && mkdir -p ${LIQUIBASE_DOWNLOAD_DIR} \
     && mkdir -p ${LIQUIBASE_INSTALL_DIR} \
-    && cd ${LIQUIBASE_DOWNLOAD_DIR} || exit \
-    && wget -q --show-progress https://github.com/liquibase/liquibase/releases/download/v${LIQUIBASE_VERSION}/${LIQUIBASE_BUNDLE} \
-    && unzip ${LIQUIBASE_BUNDLE} \
-    && cp -r ${LIQUIBASE_DOWNLOAD_DIR}/. ${LIQUIBASE_INSTALL_DIR} \
+    && wget -P ${LIQUIBASE_DOWNLOAD_DIR} -q --show-progress https://github.com/liquibase/liquibase/releases/download/v${LIQUIBASE_VERSION}/${LIQUIBASE_BUNDLE} \
+    && unzip ${LIQUIBASE_DOWNLOAD_DIR}${LIQUIBASE_BUNDLE} -d ${LIQUIBASE_DOWNLOAD_DIR} \
+    && cp -r ${LIQUIBASE_DOWNLOAD_DIR}. ${LIQUIBASE_INSTALL_DIR} \
     && chmod +x ${LIQUIBASE_INSTALL_DIR}liquibase \
     && rm -rf ${LIQUIBASE_DOWNLOAD_DIR}
 
 # Install Gauge
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+USER vscode
 RUN curl -SsL https://downloads.gauge.org/stable | sh \
-    && su vscode -c "gauge install python" \
-    && su vscode -c "gauge install html-report" \
-    && su vscode -c "gauge install screenshot"
+    && gauge install python \
+    && gauge install html-report \
+    && gauge install screenshot
