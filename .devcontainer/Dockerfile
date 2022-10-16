@@ -33,15 +33,14 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 # Install Liquibase
 ARG LIQUIBASE_VERSION=4.16.1
-ARG LIQUIBASE_DOWNLOAD_DIR=/tmp/liquibase
+ARG LIQUIBASE_DOWNLOAD_DIR=/tmp/liquibase/
 ARG LIQUIBASE_INSTALL_DIR=/usr/local/bin/liquibase/
 RUN export LIQUIBASE_BUNDLE=liquibase-${LIQUIBASE_VERSION}.zip \
     && mkdir -p ${LIQUIBASE_DOWNLOAD_DIR} \
     && mkdir -p ${LIQUIBASE_INSTALL_DIR} \
-    && cd ${LIQUIBASE_DOWNLOAD_DIR} || exit \
-    && wget -q --show-progress https://github.com/liquibase/liquibase/releases/download/v${LIQUIBASE_VERSION}/${LIQUIBASE_BUNDLE} \
-    && unzip ${LIQUIBASE_BUNDLE} \
-    && cp -r ${LIQUIBASE_DOWNLOAD_DIR}/. ${LIQUIBASE_INSTALL_DIR} \
+    && wget -P ${LIQUIBASE_DOWNLOAD_DIR} -q --show-progress https://github.com/liquibase/liquibase/releases/download/v${LIQUIBASE_VERSION}/${LIQUIBASE_BUNDLE} \
+    && unzip ${LIQUIBASE_DOWNLOAD_DIR}${LIQUIBASE_BUNDLE} -d ${LIQUIBASE_DOWNLOAD_DIR} \
+    && cp -r ${LIQUIBASE_DOWNLOAD_DIR}. ${LIQUIBASE_INSTALL_DIR} \
     && chmod +x ${LIQUIBASE_INSTALL_DIR}liquibase \
     && rm -rf ${LIQUIBASE_DOWNLOAD_DIR}
 
