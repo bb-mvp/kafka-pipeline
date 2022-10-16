@@ -14,7 +14,7 @@ services:
         NODE_VERSION: "lts/*"
 
     volumes:
-      - ../..:/workspaces:cached 
+      - ../..:/workspaces:cached
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
@@ -38,8 +38,8 @@ services:
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: postgres
 
-    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
+      # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+      # (Adding the "ports" property to this file will not forward from a Codespace.)
 
 volumes:
   postgres-data:
