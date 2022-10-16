@@ -23,7 +23,12 @@ RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release 
 # [Optional] Uncomment this section to install additional OS packages.
 ARG POSTGRES_VERSION="14"
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends postgresql-client-${POSTGRES_VERSION}
+    && apt-get -y install --no-install-recommends postgresql-client-${POSTGRES_VERSION} \
+
+# Clean up apt-get as per https://github.com/hadolint/hadolint/wiki/DL3009
+    && apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Liquibase
 ARG LIQUIBASE_VERSION=4.16.1
