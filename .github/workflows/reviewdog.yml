@@ -21,3 +21,13 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-check
+
+  linter_name:
+    name: runner / black formatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: reviewdog/action-black@v3
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-check
