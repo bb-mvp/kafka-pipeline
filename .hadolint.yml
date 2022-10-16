@@ -1,0 +1,8 @@
+ignored:
+
+  # Updating pinned versions of apt-get software is cumbersome, as there is no automatic way to
+  # update them (Dependabot doesn't provide a way to do this, for instance).
+  # So we have decided to not pin apt-get versions in our devcontainer Dockerfile as they are just
+  # for the devcontainer and not for anything production facing.
+  # https://github.com/hadolint/hadolint/wiki/DL3008
+  - DL3008
