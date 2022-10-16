@@ -6,3 +6,10 @@ ignored:
   # for the devcontainer and not for anything production facing.
   # https://github.com/hadolint/hadolint/wiki/DL3008
   - DL3008
+
+  # Ignore Hadolint prompts to use just one of Wget and curl, as they both come preinstalled on our
+  # devcontainer.  Amending our bash commands to just use one of them isn't worth it, especially as
+  # the commands are generally the "standard" way to install the software in question from the
+  # command line.
+  # https://github.com/hadolint/hadolint/wiki/DL4001
+  - DL4001
