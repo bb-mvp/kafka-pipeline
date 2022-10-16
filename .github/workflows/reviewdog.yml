@@ -45,3 +45,15 @@ jobs:
           path: "."
           pattern: "*.sh"
           exclude: "./.git/*"
+
+  hadolint:
+    name: runner / hadolint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: hadolint
+        uses: reviewdog/action-hadolint@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-check
