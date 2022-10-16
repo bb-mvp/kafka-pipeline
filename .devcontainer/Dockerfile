@@ -46,7 +46,8 @@ RUN export LIQUIBASE_BUNDLE=liquibase-${LIQUIBASE_VERSION}.zip \
 
 # Install Gauge
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+USER vscode
 RUN curl -SsL https://downloads.gauge.org/stable | sh \
-    && su vscode -c "gauge install python" \
-    && su vscode -c "gauge install html-report" \
-    && su vscode -c "gauge install screenshot"
+    && gauge install python \
+    && gauge install html-report \
+    && gauge install screenshot
