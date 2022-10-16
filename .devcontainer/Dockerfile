@@ -16,6 +16,7 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 
 # Use the PostgreSQL apt repository to install Postgres command line tools (see https://www.postgresql.org/download/linux/debian/)
 # Create the file repository configuration:
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' \
 # Import the repository signing key:
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
