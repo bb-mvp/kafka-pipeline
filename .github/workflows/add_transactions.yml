@@ -1,5 +1,5 @@
-name: Reusable workflow to add transactions
-run-name: Reusable workflow to add transactions (triggered by @${{ github.actor }})
+name: Reusable inner workflow to add transactions
+run-name: Reusable inner workflow to add transactions (triggered by @${{ github.actor }})
 on:
   workflow_call:
     inputs:
