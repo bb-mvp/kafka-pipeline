@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       github-username:
-        description: 'Your GitHub username (for secrets from corresponding GitHub environment)'
+        description: 'Your GitHub username'
         required: true
         type: string
 
