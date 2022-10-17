@@ -16,9 +16,17 @@ Change Data Capture (CDC) via [Debezium](https://debezium.io).
 - Sign up for a new AWS account with 12 month free trial
 
 - Create the [PostgreSQL database on AWS RDS](https://aws.amazon.com/rds/postgresql/)
- 
-- Verify you can connect to the database
-  - You can do this using any PostgreSQL client
+
+  - Make sure you choose the RDS free tier
+  - [Make the database publicly accessible](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html#USER_ConnectToPostgreSQLInstance.Troubleshooting-timeout)
+  - [Add an inbound rule allowing connections to Postgres](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html#USER_ConnectToPostgreSQLInstance.Troubleshooting-AccessRules)
+  - Verify you can connect to the database
+      - You can do this using any PostgreSQL client
+  - [Turn on logical replication and apply it to your new database](https://aws.amazon.com/premiumsupport/knowledge-center/rds-postgresql-use-logical-replication/#Turn_on_logical_replication)
+
+    NB you don't need to follow any of the other steps in this link about replicating databases,
+    just the paragraph "Turn on logical replication".
+
 
 #### Store your AWS PostgreSQL connection details as secrets on GitHub
 
