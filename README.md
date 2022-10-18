@@ -22,11 +22,25 @@ Change Data Capture (CDC) via [Debezium](https://debezium.io).
   - [Add an inbound rule allowing connections to Postgres](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html#USER_ConnectToPostgreSQLInstance.Troubleshooting-AccessRules)
   - Verify you can connect to the database
       - You can do this using any PostgreSQL client
-  - [Turn on logical replication and apply it to your new database](https://aws.amazon.com/premiumsupport/knowledge-center/rds-postgresql-use-logical-replication/#Turn_on_logical_replication)
-
-    NB you don't need to follow any of the other steps in this link about replicating databases,
-    just the paragraph "Turn on logical replication".
-
+  - Turn on logical replication and apply it to your new database (needed for Change Data Capture to Kafka)
+    - Go to the [parameter groups page on AWS](https://console.aws.amazon.com/rds/home#parameter-groups:)
+    - Click on "create parameter group"
+    - choose `postgres14` as the Parameter group family (assuming you chose version 14 for your database)
+    - call your new group `cdc-parameter-group`
+    - click on "Create"
+    - click on your newly created `cdc-parameter-group`
+    - search for `rds.logical_replication`
+    - click on "Edit parameters"
+    - change the value of "rds.logical_replication" to "1"
+    - click on "Save changes"
+    - click on "Databases" on the left navigation menu and click on your database
+    - click on the "Modify" button at the top right of the page
+    - Scroll down to the "Additional configuration" section and expand it if necessary
+    - Change the "DB parameter group" to the `cdc-parameter-group` parameter group you just created
+    - Scroll down to the bottom and click the "Continue" button
+    - Choose "Apply immediately"
+    - Click "Modify DB instance"
+    - NB it will take a few minutes for the change to take effect
 
 #### Store your AWS PostgreSQL connection details as secrets on GitHub
 
