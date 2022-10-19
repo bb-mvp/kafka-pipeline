@@ -15,17 +15,35 @@ Change Data Capture (CDC) via [Debezium](https://debezium.io).
 
 - Sign up for a new AWS account with 12 month free trial
 
-- Create the [PostgreSQL database on AWS RDS](https://aws.amazon.com/rds/postgresql/)
+- Change your region to `eu-west-1` (Ireland) via the top-right navigation
+  (it can be any region really, so feel free to choose another one if you prefer)
 
-  - Make sure you choose the RDS free tier
-  - [Make the database publicly accessible](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html#USER_ConnectToPostgreSQLInstance.Troubleshooting-timeout)
-  - [Add an inbound rule allowing connections to Postgres](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html#USER_ConnectToPostgreSQLInstance.Troubleshooting-AccessRules)
+- Create and setup the [PostgreSQL database on AWS RDS](https://aws.amazon.com/rds/postgresql/)
+  - Create the database
+    - Go to the [RDS homepage on the AWS console](https://console.aws.amazon.com/rds/home)
+    - Click "Create database"
+    - Choose "Standard create"
+    - Choose "PostgreSQL" as the Engine type
+    - keep the default version `13.x` of Postgres (we have tested that the pipeline works with `14` too, but easiest
+      to keep with the default)
+    - Make sure you choose the Free tier template
+    - Keep all the other defaults as they are, apart from:
+      - choosing whichever name you like for the database
+      - choose "Yes" for Public access
+  - [Add an inbound rule allowing connections to Postgres](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html#USER_ConnectToPostgreSQLInstance.Troubleshooting-AccessRules):
+    - Go to the [databases page](https://console.aws.amazon.com/rds/home#databases:)
+    - Click on your database
+    - On the "Connectivity & security" tab, click on the VPC security group (under "Security"), to take
+      you to the [Security Groups page](https://console.aws.amazon.com/ec2/v2/home#SecurityGroups:)
+    - At the bottom of the Security Groups page, click on "Edit inbound rules"
+    - Add a new rule with the Type being `PostgreSQL` and a Custom Source of `0.0.0.0/0`
+
   - Verify you can connect to the database
       - You can do this using any PostgreSQL client
   - Turn on logical replication and apply it to your new database (needed for Change Data Capture to Kafka)
     - Go to the [parameter groups page on AWS](https://console.aws.amazon.com/rds/home#parameter-groups:)
     - Click on "create parameter group"
-    - choose `postgres14` as the Parameter group family (assuming you chose version 14 for your database)
+    - choose `postgres13` as the Parameter group family (matching the version 13 that we installed above)
     - call your new group `cdc-parameter-group`
     - click on "Create"
     - click on your newly created `cdc-parameter-group`
@@ -40,7 +58,12 @@ Change Data Capture (CDC) via [Debezium](https://debezium.io).
     - Scroll down to the bottom and click the "Continue" button
     - Choose "Apply immediately"
     - Click "Modify DB instance"
-    - NB it will take a few minutes for the change to take effect
+    - NB it will take a few minutes for the change to be applied to the instance, and then you have to reboot
+      (by navigating to `Actions` -> `Reboot`)
+    - Verify logical replication has been successfully configured by running this query in whichever PostgreSQL
+      client you are using, and checking that the returned `wal_level` is `logical`:
+
+      `SELECT name,setting FROM pg_settings WHERE name IN ('wal_level','rds.logical_replication');`
 
 #### Store your AWS PostgreSQL connection details as secrets on GitHub
 
