@@ -79,8 +79,9 @@ def add_transactions(frequency, duration):
                     random_iban(),
                 ),
             )
+            conn.commit()
             time.sleep(int(frequency))
-        conn.commit()
+
         cur.close()
     except (Exception, Error) as err:
         error = err
