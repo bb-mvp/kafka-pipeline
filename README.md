@@ -29,13 +29,17 @@ Change Data Capture (CDC) via [Debezium](https://debezium.io).
     - Make sure you choose the Free tier template
     - Keep all the other defaults as they are, apart from:
       - choosing whichever name you like for the database
+      - you can choose your own password if you prefer that to an auto generated one
       - choose "Yes" for Public access
+    - Finally click on the "Create database" button at the bottom of the page
   - [Add an inbound rule allowing connections to Postgres](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html#USER_ConnectToPostgreSQLInstance.Troubleshooting-AccessRules):
     - Go to the [databases page](https://console.aws.amazon.com/rds/home#databases:)
     - Click on your database
     - On the "Connectivity & security" tab, click on the VPC security group (under "Security"), to take
-      you to the [Security Groups page](https://console.aws.amazon.com/ec2/v2/home#SecurityGroups:)
-    - At the bottom of the Security Groups page, click on "Edit inbound rules"
+      you to the VPC section of AWS
+    - Click on "[Security Groups](https://console.aws.amazon.com/ec2/v2/home#SecurityGroups:)" in the left menu
+    - Click on the "Inbound rules" tab at the bottom of the page
+    - Click on "Edit inbound rules"
     - Add a new rule with the Type being `PostgreSQL` and a Custom Source of `0.0.0.0/0`
 
   - Verify you can connect to the database
@@ -73,7 +77,8 @@ Change Data Capture (CDC) via [Debezium](https://debezium.io).
 [environment secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-an-environment) to your environment
 
   The secrets you need to add are:
-  - `AWS_DATABASE_HOST`
+  - `AWS_DATABASE_HOST` (this is the endpoint in the "Connectivity & security" tab of your
+     database, found by navigating to the [databases page](https://console.aws.amazon.com/rds/home#databases:))
   - `AWS_DATABASE_NAME` (this will be `postgres`)
   - `AWS_DATABASE_PASSWORD`
   - `AWS_DATABASE_PORT` (this will be `5432`)
