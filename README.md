@@ -97,6 +97,82 @@ Change Data Capture (CDC) via [Debezium](https://debezium.io).
    NB You can run this workflow as often as you like, to add more data whenever you want to.
 
 
-### Stream the AWS data into Kafka
+### Stream the AWS data into Kafka (Confluent Cloud)
 
-- To Do: complete this documentation
+We are using [Confluent Cloud](https://www.confluent.io/confluent-cloud) as our Kafka platform for this proof of
+concept, as it is a fully-managed platform which makes it very easy to get started with.
+
+#### Setup your Confluent Cloud account
+
+1. Sign up via https://www.confluent.io/confluent-cloud/tryfree/
+3. Add promo codes to add to your free credit:
+   - ask a [repository maintainer](.github/CODEOWNERS) for the promo codes you need to add
+   - go to Confluent's [payments page](https://confluent.cloud/settings/billing/payment) and add the promo codes, one
+     by one
+   - this should give you enough credit to last 3 months
+
+#### Create a Kafka cluster on Confluent Cloud
+
+- Follow step 1 (step 1 only, don't continue to step 2)
+  [of Confluent's documentation](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud)
+
+#### Add a Postgres CDC Source connector to your Kafka cluster
+
+Background reading: [Postgres CDC Source connector documentation](https://docs.confluent.io/cloud/current/connectors/cc-postgresql-cdc-source-debezium.html#postgresql-cdc-source-connector-debezium-for-ccloud)
+
+1. Navigate to your new cluster on Confluent Cloud
+2. Click on "Connectors" on the left menu
+3. Choose "Postgres CDC Source"
+4. Keep "Global access" selected and click on "Generate API key & download"
+5. Give your API credentials a name
+6. On the configuration input form, enter:
+   - Database name: `postgres`
+   - Database server name: `mvp` (or anything you like. It will become the prefix for your Kafka topics)
+   - SSL mode: `require`
+   - Database hostname: the endpoint in the "Connectivity & security" tab of your
+     AWS database, on the [AWS databases page](https://console.aws.amazon.com/rds/home#databases:)
+   - Database port: `5432`
+   - Database username: `postgres`
+   - Database password: your AWS Postgres database password
+7. Click on "Continue"
+8. Choose `JSON` as both the "Output Kafka record value" and "Output Kafka record key" formats
+9. Expand the "Show advanced configurations" dropdown and enter the following:
+   - JSON output decimal format: `NUMERIC`
+   - Plugin name: `pgoutput`
+   - Tables included: `public.transaction`
+   - Decimal handling mode: `string`
+10. Click on "Continue"
+11. Click on "Continue" on the "Connector sizing" page
+12. Click on "Continue" on the "Review and launch page"
+13. Wait a minute or so for the connector to be provisioned
+
+#### Stream data into Kafka via the Postgres CDC Source connector
+
+This is very straightforward:
+
+1. [Add example bank transactions to your AWS database](#add-example-bank-transactions-into-your-aws-database-via-the-github-actions-workflow)
+2. On Confluent Cloud, navigate to your cluster and click on "Topics" on the left menu
+3. You will see that a `<your-prefix>.public.transaction` topic has been added
+4. If you click on the topic and then the "Messages" tab, you can see the messages by specifying the
+   offset as `0 / Partition: 0`
+
+   Also, if you then kick off another GitHub Actions workflow run to add more bank transactions to your
+   AWS database, if you go to the "Messages" tab of your Kakfa topic and keep the page open, you will see
+   the bank transactions appear in Kakfa in realtime.
+
+#### Delete your AWS database to avoid paying for consuming too much storage
+
+Under certain conditions the AWS database is consuming storage very quickly after connecting the database to Kafka via Postgres CDC. This can exhaust AWS's free monthly 20GB limit and lead to credit card charges.
+
+We have a [GitHub issue for this](https://github.com/bb-mvp/kafka-pipeline/issues/30), and all contributors are very
+welcome to try to solve it.
+
+Until this issue is solved the recommended course of action is to delete the AWS database after successfully verifying you have the CDC connection between Kafka and the database working.  It looks like it takes several hours for the 20GB to be
+consumed, but it's best to delete (or at least pause) the AWS database as soon as you are finished working with it.
+(Pausing it is great, but has the important caveat that it will automatically be restarted again after 7 days, which is a
+little dangerous compared to deleting it).
+
+
+
+
+
