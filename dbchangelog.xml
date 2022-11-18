@@ -1,5 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                                                                                                                                                                                                                                                             http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
+                                                                                                                                                                                                                                                             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <property name="now" value="now()" dbms="postgresql" />
     <changeSet author="cfagaras" id="1">
         <createTable tableName="transaction">
@@ -20,5 +22,16 @@
             <column name="source_account" type="VARCHAR" />
             <column name="destination_account" type="VARCHAR" />
         </createTable>
+    </changeSet>
+    <changeSet author="johnboyes" id="2">
+        <comment>As per https://github.com/bb-mvp/kafka-pipeline/issues/32</comment>
+        <createTable tableName="debezium_heartbeat">
+            <column name="last_heartbeat_ts" type="datetime" defaultValue="${now}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="debezium_heartbeat_pkey" />
+            </column>
+        </createTable>
+        <insert tableName="debezium_heartbeat">
+            <column name="last_heartbeat_ts" value="${now}" />
+        </insert>
     </changeSet>
 </databaseChangeLog>

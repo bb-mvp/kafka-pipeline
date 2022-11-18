@@ -139,8 +139,12 @@ Background reading: [Postgres CDC Source connector documentation](https://docs.c
 9. Expand the "Show advanced configurations" dropdown and enter the following:
    - JSON output decimal format: `NUMERIC`
    - Plugin name: `pgoutput`
-   - Tables included: `public.transaction`
+   - Tables included: `public.transaction,public.debezium_heartbeat`
    - Decimal handling mode: `string`
+   - Heartbeat interval (ms): `240000`
+   - Heartbeat action query: `UPDATE debezium_heartbeat set last_heartbeat_ts = now();` 
+
+     ([further reading on why the heartbeat is needed](https://github.com/bb-mvp/kafka-pipeline/issues/32))
 10. Click on "Continue"
 11. Click on "Continue" on the "Connector sizing" page
 12. Click on "Continue" on the "Review and launch page"
@@ -159,18 +163,6 @@ This is very straightforward:
    Also, if you then kick off another GitHub Actions workflow run to add more bank transactions to your
    AWS database, if you go to the "Messages" tab of your Kakfa topic and keep the page open, you will see
    the bank transactions appear in Kakfa in realtime.
-
-#### Delete your AWS database to avoid paying for consuming too much storage
-
-Under certain conditions the AWS database is consuming storage very quickly after connecting the database to Kafka via Postgres CDC. This can exhaust AWS's free monthly 20GB limit and lead to credit card charges.
-
-We have a [GitHub issue for this](https://github.com/bb-mvp/kafka-pipeline/issues/30), and all contributors are very
-welcome to try to solve it.
-
-Until this issue is solved the recommended course of action is to delete the AWS database after successfully verifying you have the CDC connection between Kafka and the database working.  It looks like it takes several hours for the 20GB to be
-consumed, but it's best to delete (or at least pause) the AWS database as soon as you are finished working with it.
-(Pausing it is great, but has the important caveat that it will automatically be restarted again after 7 days, which is a
-little dangerous compared to deleting it).
 
 
 
