@@ -27,6 +27,9 @@ Change Data Capture (CDC) via [Debezium](https://debezium.io).
     - keep the default version `13.x` of Postgres (we have tested that the pipeline works with `14` too, but easiest
       to keep with the default)
     - Make sure you choose the Free tier template
+    - In the "Storage" section:
+      1. change the "Allocated storage" to `5` GiB (it says the minimum value is 20 GiB, but it actually allows you to enter anything from 5 upwards)
+      2. untick the "Enable storage autoscaling" check box
     - Keep all the other defaults as they are, apart from:
       - choosing whichever name you like for the database
       - you can choose your own password if you prefer that to an auto generated one
