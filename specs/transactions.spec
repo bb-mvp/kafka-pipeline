@@ -2,4 +2,4 @@
 
 ## Add transactions
 
-* Add a transactions for "10" seconds in mc_payments and mc_status
+* Add "5" transactions in mc_payments and mc_status
