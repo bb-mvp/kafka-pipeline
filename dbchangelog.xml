@@ -34,4 +34,66 @@
             <column name="last_heartbeat_ts" value="${now}" />
         </insert>
     </changeSet>
+    <changeSet author="cfagaras" id="3">
+        <createTable tableName="mc_status">
+            <column name="data_cre" type="datetime" />
+            <column name="correlation_id" type="VARCHAR" />
+            <column name="brch" type="char(4)" />
+            <column name="error_code" type="CHAR(4)" />
+        </createTable>
+    </changeSet>
+    <changeSet author="cfagaras" id="4">
+        <createTable tableName="mc_payments">
+            <column name="brch" type="char(4)" />
+            <column name="application" type="VARCHAR" />
+            <column name="correlation_id" type="VARCHAR" />
+            <column name="bfo_transaction_id" type="VARCHAR" />
+            <column name="transaction_type" type="varchar" />
+            <column name="source_account" type="varchar" />
+            <column name="source_account_ownerid" type="number" />
+            <column name="source_account_ownername" type="VARCHAR" />
+            <column name="source_account_type" type="VARCHAR" />
+            <column name="source_account_currency" type="VARCHAR" />
+            <column name="target_account" type="varchar" />
+            <column name="target_account_ownerid" type="number" />
+            <column name="target_account_ownername" type="VARCHAR" />
+            <column name="target_account_type" type="VARCHAR" />
+            <column name="target_account_currency" type="VARCHAR" />
+            <column name="transaction_currency" type="varchar" />
+            <column name="transaction_amount" type="number" />
+            <column name="transaction_valuedate" type="date" />
+            <column name="transaction_description" type="VARCHAR" />
+        </createTable>
+    </changeSet>
+    <changeSet author="cfagaras" id="5">
+        <createTable tableName="bdol_tx">
+            <column autoIncrement="true" name="seq_bdol" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="seq_bdol_pk" />
+            </column>
+            <column name="atxdb_appl" type="CHAR(2)" />
+            <column name="atxdb_acct" type="BIGINT" />
+            <column name="atxdb_cust" type="BIGINT" />
+            <column name="atxdb_cpud" type="date" />
+            <column name="atxdb_time" type="BIGINT" />
+            <column name="atxdb_date" type="date" />
+            <column name="atxdb_txcd" type="CHAR(2)" />
+            <column name="atxdb_chq" type="CHAR(1)" />
+            <column name="atxdb_c_d" type="CHAR(1)" />
+            <column name="atxdb_curr" type="CHAR(1)" />
+            <column name="atxdb_tx_amt" type="numeric(18, 2)" />
+            <column name="atxdb_ref_1" type="VARCHAR(16)" />
+            <column name="atxdb_ref_2" type="VARCHAR(16)" />
+            <column name="atxdb_ref_appl" type="CHAR(2)" />
+            <column name="atxdb_ref_txcd" type="CHAR(2)" />
+            <column name="atxdb_doc_id" type="VARCHAR(16)" />
+            <column name="atxdb_doc_type" type="CHAR(3)" />
+            <column name="atxdb_grup_id" type="CHAR(16)" />
+            <column name="atxdb_bus_date" type="date" />
+            <column name="arefer_ref_a" type="VARCHAR(140)" />
+            <column name="arefer_oth_client" type="VARCHAR(40)" />
+            <column name="aextras_1" type="VARCHAR(255)" />
+            <column name="aextras_2" type="VARCHAR(255)" />
+            <column name="aextras_3" type="VARCHAR(255)" />
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
