@@ -72,11 +72,6 @@ jobs:
 
       - name: Add transactions via Gauge spec
         env:
-          LIQUIBASE_CLASSPATH: "bin/internal/lib/postgresql.jar"
-          LIQUIBASE_HUB_MODE: "off"
-          LIQUIBASE_STRICT: "true"
-          LIQUIBASE_HEADLESS: "true"
-          LIQUIBASE_CHANGELOG_FILE: "dbchangelog.xml"
           # Temporary workaround for https://github.com/getgauge/gauge-python/issues/256
           PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION: python
         run: gauge run specs

@@ -1,6 +1,8 @@
 import os
 import random
 import time
+from datetime import date
+import csv
 from getgauge.python import step
 import psycopg2
 from psycopg2 import Error
@@ -52,41 +54,119 @@ def random_iban():
     return random.choice(list_ibans)
 
 
-@step("Add a transaction every <frequency> seconds for <duration> seconds")
-def add_transactions(frequency, duration):
-    print(
-        f"Adding a transaction every {frequency} seconds for {duration} seconds . . ."
-    )
+def random_channel():
+    channels = ["MOC", "IOC"]
+    return random.choice(channels)
 
-    sql = """INSERT INTO transaction(
-             transaction_id, type, type_group, description, booking_date, credit_debit, transaction_currency,amount, status, customer_id, source_account, destination_account)
-             VALUES (%s, 'ATM', 'ATM', 'Description for ', CURRENT_DATE, %s, %s, %s,%s, '22222200', 'RO57BRDE450SV22222200001', %s);"""
-    conn = None
+
+def random_pay_type():
+    types = ["EFI", "EXS", "ISO", "XCH"]
+    return random.choice(types)
+
+
+def mc_payment_csv(transaction_id):
+
+    today = date.today
+    csv_file_name = "./sample_data/payment.csv"
+
+    # list of fields name for mc_payment
+    fields_name = [
+        "BRCH",
+        "APPLICATION",
+        "CORRELATION_ID",
+        "BFO_TRANSACTION_ID",
+        "TRANSACTION_TYPE",
+        "SOURCE_ACCOUNT",
+        "SOURCE_ACCOUNT_OWNERID",
+        "SOURCE_ACCOUNT_OWNERNAME",
+        "SOURCE_ACCOUNT_TYPE",
+        "SOURCE_ACCOUNT_CURRENCY",
+        "TARGET_ACCOUNT",
+        "TARGET_ACCOUNT_OWNERID",
+        "TARGET_ACCOUNT_OWNERNAME",
+        "TARGET_ACCOUNT_TYPE",
+        "TARGET_ACCOUNT_CURRENCY",
+        "TRANSACTION_CURRENCY",
+        "TRANSACTION_AMOUNT",
+        "TRANSACTION_VALUEDATE",
+        "TRANSACTION_DESCRIPTION",
+    ]
+
+    rows = [
+        [
+            "4500",
+            random_channel(),
+            transaction_id,
+            transaction_id,
+            random_pay_type(),
+            "RO57BRDE450SV22222200001",
+            "22222200",
+            "Peter",
+            "SV",
+            "RON",
+            random_iban(),
+            "22222200",
+            "Peter",
+            "SV",
+            random_currency(),
+            random_currency(),
+            random_amount(),
+            today(),
+            "TRANSACTION_DESCRIPTION",
+        ]
+    ]
+
+    # writing to csv file
+    with open(csv_file_name, "w") as csvfile:
+        # creating a csv writer object
+        csvwriter = csv.writer(csvfile)
+        # writing the fields
+        csvwriter.writerow(fields_name)
+
+        # writing the data rows
+        csvwriter.writerows(rows)
+
+        print("Inserted one payment record")
+
+
+def mc_status_csv(transaction_id, transaction_status):
+
+    today = date.today
+    csv_file_name = "./sample_data/status.csv"
+
+    # list of fields name for mc_status
+    fields_name = ["DATA_CRE", "CORRELATION_ID", "BRCH", "ERROR_CODE"]
+    rows = [[today(), transaction_id, "4500", transaction_status]]
+
+    # writing to csv file
+    with open(csv_file_name, "w") as csvfile:
+        # creating a csv writer object
+        csvwriter = csv.writer(csvfile)
+        # writing the fields
+        csvwriter.writerow(fields_name)
+
+        # writing the data rows
+        csvwriter.writerows(rows)
+
+        print("Inserted one status record")
+
+
+@step(
+    "Add a transaction every <frequency> seconds for <duration> seconds in mc_payments and mc_status"
+)
+def add_a_transaction_every_seconds_for_seconds_in_the_new_tables(frequency, duration):
+    t_end = end_time(duration)
     error = None
     try:
-        conn = connection()
-        cur = conn.cursor()
-        t_end = end_time(duration)
         while time.time() < t_end:
-            cur.execute(
-                sql,
-                (
-                    random_tran_id(),
-                    random_debit_credit(),
-                    random_currency(),
-                    random_amount(),
-                    random_tran_status(),
-                    random_iban(),
-                ),
-            )
-            conn.commit()
+            transaction_id = random_tran_id()
+            mc_payment_csv(transaction_id)
+            mc_status_csv(transaction_id, "0000")
+            print(os.system("sh ./scripts/liquibase_pay_insert.sh"))
             time.sleep(int(frequency))
 
-        cur.close()
     except (Exception, Error) as err:
         error = err
     finally:
-        if conn is not None:
-            conn.close()
         assert error is None, error
         print("Done")
