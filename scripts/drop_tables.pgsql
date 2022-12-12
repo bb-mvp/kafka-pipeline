@@ -6,11 +6,3 @@ drop table databasechangelog;
 drop table databasechangeloglock;
 drop table debezium_heartbeat;
 
-
-truncate table mc_status;
-truncate table mc_payments;
-
-
-select * from mc_payments;
-
-select * from mc_status;
