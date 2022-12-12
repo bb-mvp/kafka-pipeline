@@ -6,7 +6,7 @@ liquibase \
   --strict="$LIQUIBASE_STRICT" \
   --headless="$LIQUIBASE_HEADLESS" \
   update \
-  --changelog-file="$LIQUIBASE_CHANGELOG_FILE" \
+  --changelog-file="$LIQUIBASE_CHANGELOG_FILE_INSERT_PAY" \
   --url="jdbc:postgresql://$DATABASE_HOST:$DATABASE_PORT/$DATABASE_NAME" \
   --username="$DATABASE_USERNAME" \
   --password="$DATABASE_PASSWORD" \
