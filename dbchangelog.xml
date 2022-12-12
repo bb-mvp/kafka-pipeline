@@ -96,5 +96,26 @@
             <column name="aextras_3" type="VARCHAR(255)" />
         </createTable>
     </changeSet>
-
+    <changeSet author="cfagaras" id="load-payment-init_2" runAlways="true" runOnChange="true" contextFilter="load-data">
+        <loadData catalogName="cat"
+            commentLineStartsWith="//"
+            encoding="UTF-8"
+            file="./sample_data/payment.csv"
+            quotchar="'"
+            relativeToChangelogFile="false"
+            schemaName="public"
+            separator=","
+            tableName="mc_payments"
+            usePreparedStatements="true"></loadData>
+        <loadData catalogName="cat"
+            commentLineStartsWith="//"
+            encoding="UTF-8"
+            file="./sample_data/status.csv"
+            quotchar="'"
+            relativeToChangelogFile="false"
+            schemaName="public"
+            separator=","
+            tableName="mc_status"
+            usePreparedStatements="true"></loadData>
+    </changeSet>
 </databaseChangeLog>
