@@ -1,7 +1,7 @@
 import os
 import random
 import time
-from datetime import date
+import datetime
 import csv
 from getgauge.python import step
 import psycopg2
@@ -66,7 +66,7 @@ def random_pay_type():
 
 def mc_payment_csv(transaction_id):
 
-    today = date.today
+    today = datetime.datetime.now
     csv_file_name = "./sample_data/payment.csv"
 
     # list of fields name for mc_payment
@@ -126,12 +126,12 @@ def mc_payment_csv(transaction_id):
         # writing the data rows
         csvwriter.writerows(rows)
 
-        print("Inserted one payment record")
+    print("Inserted one payment record")
 
 
 def mc_status_csv(transaction_id, transaction_status):
 
-    today = date.today
+    today = datetime.datetime.now
     csv_file_name = "./sample_data/status.csv"
 
     # list of fields name for mc_status
@@ -147,8 +147,8 @@ def mc_status_csv(transaction_id, transaction_status):
 
         # writing the data rows
         csvwriter.writerows(rows)
-
-        print("Inserted one status record")
+    print(os.system("ls"))
+    print("Inserted one status record")
 
 
 @step(
