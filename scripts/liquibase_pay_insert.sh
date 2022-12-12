@@ -11,4 +11,3 @@ liquibase \
   --url="jdbc:postgresql://$DATABASE_HOST:$DATABASE_PORT/$DATABASE_NAME" \
   --username="$DATABASE_USERNAME" \
   --password="$DATABASE_PASSWORD" \
-  --log-level=FINE \
