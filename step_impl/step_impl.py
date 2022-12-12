@@ -150,16 +150,17 @@ def mc_status_csv(transaction_id, transaction_status):
     print("Status record created in CSV file!")
 
 
-@step("Add a transactions for <duration> seconds in mc_payments and mc_status")
-def add_a_transaction_every_seconds_for_seconds_in_the_new_tables(duration):
-    t_end = end_time(duration)
+@step("Add <trans_no> transactions in mc_payments and mc_status")
+def add_5_transactions_in_mc_payments_and_mc_status(trans_no):
     error = None
     try:
-        while time.time() < t_end:
+        # while time.time() < t_end:
+        for x in range(int(trans_no)):
             transaction_id = random_tran_id()
             mc_payment_csv(transaction_id)
             mc_status_csv(transaction_id, "0000")
             print(os.system("sh ./scripts/liquibase_pay_insert.sh"))
+            print("Transaction " + str(x) + " generated!")
     except (Exception, Error) as err:
         error = err
     finally:
