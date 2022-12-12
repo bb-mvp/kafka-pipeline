@@ -126,7 +126,7 @@ def mc_payment_csv(transaction_id):
         # writing the data rows
         csvwriter.writerows(rows)
 
-    print("Inserted one payment record")
+    print("Payment record created in CSV file")
 
 
 def mc_status_csv(transaction_id, transaction_status):
@@ -147,14 +147,11 @@ def mc_status_csv(transaction_id, transaction_status):
 
         # writing the data rows
         csvwriter.writerows(rows)
-    print(os.system("ls"))
-    print("Inserted one status record")
+    print("Status record created in CSV file!")
 
 
-@step(
-    "Add a transaction every <frequency> seconds for <duration> seconds in mc_payments and mc_status"
-)
-def add_a_transaction_every_seconds_for_seconds_in_the_new_tables(frequency, duration):
+@step("Add a transactions for <duration> seconds in mc_payments and mc_status")
+def add_a_transaction_every_seconds_for_seconds_in_the_new_tables(duration):
     t_end = end_time(duration)
     error = None
     try:
@@ -163,8 +160,6 @@ def add_a_transaction_every_seconds_for_seconds_in_the_new_tables(frequency, dur
             mc_payment_csv(transaction_id)
             mc_status_csv(transaction_id, "0000")
             print(os.system("sh ./scripts/liquibase_pay_insert.sh"))
-            time.sleep(int(frequency))
-
     except (Exception, Error) as err:
         error = err
     finally:
