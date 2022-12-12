@@ -6,7 +6,7 @@ liquibase \
   --strict="$LIQUIBASE_STRICT" \
   --headless="$LIQUIBASE_HEADLESS" \
   update \
-  --changelog-file="$LIQUIBASE_CHANGELOG" \
+  --changelog-file="$LIQUIBASE_CHANGELOG_FILE" \
   --contexts="load-data" \
   --url="jdbc:postgresql://$DATABASE_HOST:$DATABASE_PORT/$DATABASE_NAME" \
   --username="$DATABASE_USERNAME" \
