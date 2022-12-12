@@ -65,6 +65,7 @@
 		"LIQUIBASE_HEADLESS": "true",
 		"LIQUIBASE_HUB_MODE": "off",
 		"LIQUIBASE_CHANGELOG_FILE": "dbchangelog.xml",
+		"LIQUIBASE_CHANGELOG_FILE_INSERT_PAY":"dbchangelog_insert_pay.xml",
 		"LIQUIBASE_STRICT": "true",
 		// Temporary workaround for https://github.com/getgauge/gauge-python/issues/256
 		// See: https://github.com/protocolbuffers/protobuf/issues/10051#issuecomment-1138671075
