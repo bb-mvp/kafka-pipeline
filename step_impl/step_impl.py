@@ -160,7 +160,8 @@ def add_5_transactions_in_mc_payments_and_mc_status(trans_no):
             mc_payment_csv(transaction_id)
             mc_status_csv(transaction_id, "0000")
             print(os.system("sh ./scripts/liquibase_pay_insert.sh"))
-            print("Transaction " + str(x) + " generated!")
+            print("Transaction " + str(x + 1) + " generated!")
+            time.sleep(1)
     except (Exception, Error) as err:
         error = err
     finally:
