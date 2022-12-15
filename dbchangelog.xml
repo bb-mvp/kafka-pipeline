@@ -34,6 +34,11 @@
             <column name="last_heartbeat_ts" value="${now}" />
         </insert>
     </changeSet>
+    <changeSet author="liquibase-docs" id="dropTable-transaction">
+        <dropTable cascadeConstraints="true"
+            schemaName="public"
+            tableName="transaction" />
+    </changeSet>
     <changeSet author="cfagaras" id="3">
         <createTable tableName="mc_status">
             <column name="data_cre" type="datetime" />
