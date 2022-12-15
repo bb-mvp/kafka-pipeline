@@ -158,20 +158,20 @@ In our case those two topics are linked to the tables from Posgresql that mimics
 The steps for having that are:
 1. Navigate to your new cluster on Confluent Cloud
 2. Click on ksqlDB on the left menu
-  2.1 Select "Create with tutorial"
-  2.2 Select "Global access". Hit "Continue" button down bellow
-  2.3 Enter a name for the new ksqlDB cluster
-  2.4 Set the "Cluster size" to 1 (it is the default value)
-  2.5 Click on "Launch cluster" button down bellow
-  2.6 If you want to be notified for each action realted to cluster push "Allow notifications" button. Otherwise hit "Not now"
+  - Select "Create with tutorial"
+  - Select "Global access". Hit "Continue" button down bellow
+  - Enter a name for the new ksqlDB cluster
+  - Set the "Cluster size" to 1 (it is the default value)
+  - Click on "Launch cluster" button down bellow
+  - If you want to be notified for each action realted to cluster push "Allow notifications" button. Otherwise hit "Not now"
 3. Click on "Stream Designer" on the left menu
-  3.1 Click on "+ Create pipeline" on the top right on the page
-  3.2 You will be prompted to enter the Pipeline name. Please fill in the name (and Description if you want). I set it up to "transaction_history"
-  3.3 Select "Start with Topic" from the left menu. Hit "Start building".
-  3.4 By default a Scripting page should pe promted on the right. If not please scroll down the page (there are some UI problems with the page) and select from the bottom-right corner the button to enable Source Code: "View pipeline graph and Code"
-  3.4 Now, you should see a source code page on the right. Please copy paste the SQL instructions from the repository: "kafka_scripts/payment_status_stream". Please be noticed that the script will work ONLY if you named your database server name in Confluent Cloud "mvp". Otherwise you should: 1. change "mvp" with the name of your server in the definition of stream components)
-  3.5 In order to save the code you should press the "Apply changes". If the button is greyed you should first grant privileges to pipeline. For this there is a button above the coding window.
-  3.6 If everything is OK you should see in the top right corner "Activate now" option. Please press it.
+  - Click on "+ Create pipeline" on the top right on the page
+  - You will be prompted to enter the Pipeline name. Please fill in the name (and Description if you want). I set it up to "transaction_history"
+  - Select "Start with Topic" from the left menu. Hit "Start building".
+  - By default a Scripting page should pe promted on the right. If not please scroll down the page (there are some UI problems with the page) and select from the bottom-right corner the button to enable Source Code: "View pipeline graph and Code"
+  - Now, you should see a source code page on the right. Please copy paste the SQL instructions from the repository: "kafka_scripts/payment_status_stream". Please be noticed that the script will work ONLY if you named your database server name in Confluent Cloud "mvp". Otherwise you should: 1. change "mvp" with the name of your server in the definition of stream components)
+  - In order to save the code you should press the "Apply changes". If the button is greyed you should first grant privileges to pipeline. For this there is a button above the coding window.
+  - If everything is OK you should see in the top right corner "Activate now" option. Please press it.
 
 Now you have the entire pipeline up and running and you should see in the topic" transactions" the joined transactions.
 
