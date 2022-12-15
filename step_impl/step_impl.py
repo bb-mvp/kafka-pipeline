@@ -67,7 +67,7 @@ def random_pay_type():
 def mc_payment_csv(transaction_id):
 
     today = datetime.datetime.now
-    csv_file_name = "./sample_data/payment.csv"
+    csv_file_name = "./liquibase_sample_data/payment.csv"
 
     # list of fields name for mc_payment
     fields_name = [
@@ -132,7 +132,7 @@ def mc_payment_csv(transaction_id):
 def mc_status_csv(transaction_id, transaction_status):
 
     today = datetime.datetime.now
-    csv_file_name = "./sample_data/status.csv"
+    csv_file_name = "./liquibase_sample_data/status.csv"
 
     # list of fields name for mc_status
     fields_name = ["DATA_CRE", "CORRELATION_ID", "BRCH", "ERROR_CODE"]
