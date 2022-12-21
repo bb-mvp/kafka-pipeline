@@ -1,7 +1,11 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
-                                                                                                                                                                                                                                                             http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
-                                                                                                                                                                                                                                                             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <property name="now" value="now()" dbms="postgresql" />
     <changeSet author="cfagaras" id="1">
         <createTable tableName="transaction">
@@ -27,7 +31,8 @@
         <comment>As per https://github.com/bb-mvp/kafka-pipeline/issues/32</comment>
         <createTable tableName="debezium_heartbeat">
             <column name="last_heartbeat_ts" type="datetime" defaultValue="${now}">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="debezium_heartbeat_pkey" />
+                <constraints nullable="false" primaryKey="true"
+                    primaryKeyName="debezium_heartbeat_pkey" />
             </column>
         </createTable>
         <insert tableName="debezium_heartbeat">
@@ -101,9 +106,9 @@
             <column name="aextras_3" type="VARCHAR(255)" />
         </createTable>
     </changeSet>
-    <changeSet author="cfagaras" id="load-payment-init_3" runAlways="true" runOnChange="true" contextFilter="load-data">
-        <loadData catalogName="cat"
-            commentLineStartsWith="//"
+    <changeSet author="cfagaras" id="load-payment-init_3" runAlways="true" runOnChange="true"
+        contextFilter="load-data">
+        <loadData commentLineStartsWith="//"
             encoding="UTF-8"
             file="./liquibase_sample_data/payment.csv"
             quotchar="'"
@@ -112,13 +117,11 @@
             separator=","
             tableName="mc_payments"
             usePreparedStatements="true"></loadData>
-        <loadData catalogName="cat"
-            commentLineStartsWith="//"
+        <loadData commentLineStartsWith="//"
             encoding="UTF-8"
             file="./liquibase_sample_data/status.csv"
             quotchar="'"
             relativeToChangelogFile="false"
-            schemaName="public"
             separator=","
             tableName="mc_status"
             usePreparedStatements="true"></loadData>
