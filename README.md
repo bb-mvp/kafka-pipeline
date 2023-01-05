@@ -95,7 +95,7 @@ Change Data Capture (CDC) via [Debezium](https://debezium.io).
 4. Enter your GitHub username as prompted
 5. Verify that the workflow completes successfully:
    - Check the workflow result via the GitHub Actions UI
-   - Use your PostgreSQL client to verify that your AWS database has new transactions in the `transaction` table
+   - Use your PostgreSQL client to verify that your AWS database has new transactions in the `mc_payments` and in `mc_status` tables
 
    NB You can run this workflow as often as you like, to add more data whenever you want to.
 
@@ -142,7 +142,7 @@ Background reading: [Postgres CDC Source connector documentation](https://docs.c
 9. Expand the "Show advanced configurations" dropdown and enter the following:
    - JSON output decimal format: `NUMERIC`
    - Plugin name: `pgoutput`
-   - Tables included: `public.transaction,public.debezium_heartbeat`
+   - Tables included: `public.mc_payments, public.mc_status ,public.debezium_heartbeat`
    - Decimal handling mode: `string`
    - Heartbeat interval (ms): `240000`
    - Heartbeat action query: `UPDATE debezium_heartbeat set last_heartbeat_ts = now();` 
@@ -152,6 +152,34 @@ Background reading: [Postgres CDC Source connector documentation](https://docs.c
 11. Click on "Continue" on the "Connector sizing" page
 12. Click on "Continue" on the "Review and launch page"
 13. Wait a minute or so for the connector to be provisioned
+
+#### Add a Stream pipeline to your Kafka cluster
+
+Kafka Stream topic is needed in order to join messages from 2 different topics. 
+In our case those two topics are linked to the tables from Posgresql that mimics the payment solution: `mc_payments` and `mc_status`.
+
+The steps for having that are:
+1. Navigate to your new cluster on Confluent Cloud
+2. Click on ksqlDB on the left menu:
+   - Select "Create with tutorial"
+   - Select "Global access". Hit "Continue" button down bellow
+   - Enter a name for the new ksqlDB cluster
+   - Set the "Cluster size" to 1 (it is the default value)
+   - Click on "Launch cluster" button down bellow
+   - If you want to be notified for each action realted to cluster push "Allow notifications" button. Otherwise hit "Not now"
+3. Click on "Stream Designer" on the left menu:
+   - Click on "+ Create pipeline" on the top right on the page
+   - You will be prompted to enter the Pipeline name. Please fill in the name (and Description if you want). I set it up to "transaction_history"
+   - Select "Start with Topic" from the left menu. Hit "Start building".
+   - By default a Scripting page should pe promted on the right. If not please scroll down the page (there are some UI problems with the page) and select from the bottom-right corner the button to enable Source Code: "View pipeline graph and Code"
+   - Now, you should see a source code page on the right. Please copy paste the SQL instructions from the repository: "kafka_scripts/payment_status_stream". Please be noticed that the script will work ONLY if you named your database server name in Confluent Cloud "mvp". Otherwise you should: 1. change "mvp" with the name of your server in the definition of stream components)
+   - In order to save the code you should press the "Apply changes". If the button is greyed you should first grant privileges to pipeline. For this there is a button above the coding window.
+   - If everything is OK you should see in the top right corner "Activate now" option. Please press it.
+
+Now you have the entire pipeline up and running and you should see in the topic" transactions" the joined transactions.
+
+
+
 
 #### Stream data into Kafka via the Postgres CDC Source connector
 
