@@ -70,7 +70,7 @@ def random_pay_type():
 def mc_payment_csv(transaction_id):
 
     today = datetime.datetime.now
-    csv_file_name = PAYMENT_DATA_FILE
+    csv_file_name = "./liquibase_sample_data/payment.csv"
 
     # list of fields name for mc_payment
     fields_name = [
@@ -135,7 +135,7 @@ def mc_payment_csv(transaction_id):
 def mc_status_csv(transaction_id, transaction_status):
 
     today = datetime.datetime.now
-    csv_file_name = NEW_STATUS_DATA_FILE
+    csv_file_name = "./liquibase_sample_data/status.csv"
 
     # list of fields name for mc_status
     fields_name = ["DATA_CRE", "CORRELATION_ID", "BRCH", "ERROR_CODE"]
@@ -153,14 +153,6 @@ def mc_status_csv(transaction_id, transaction_status):
     print("Status record created in CSV file!")
 
 
-def file_cleanup():
-    if os.path.exists(PAYMENT_DATA_FILE):
-        os.remove(PAYMENT_DATA_FILE)
-    if os.path.exists(NEW_STATUS_DATA_FILE):
-        os.remove(NEW_STATUS_DATA_FILE)
-    print("File cleanup successfull !")
-
-
 @step("Add <trans_no> transactions in mc_payments and mc_status")
 def add_5_transactions_in_mc_payments_and_mc_status(trans_no):
     error = None
@@ -170,8 +162,8 @@ def add_5_transactions_in_mc_payments_and_mc_status(trans_no):
             transaction_id = random_tran_id()
             mc_payment_csv(transaction_id)
             mc_status_csv(transaction_id, "0000")
-            os.system("sh ./scripts/liquibase_pay_insert.sh")
-            print("Transaction " + str(x + 1) + " generated!\r\n\r\n")
+            print(os.system("sh ./scripts/liquibase_pay_insert.sh"))
+            print("Transaction " + str(x + 1) + " generated!")
             time.sleep(1)
     except (Exception, Error) as err:
         error = err

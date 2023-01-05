@@ -142,7 +142,7 @@ Background reading: [Postgres CDC Source connector documentation](https://docs.c
 9. Expand the "Show advanced configurations" dropdown and enter the following:
    - JSON output decimal format: `NUMERIC`
    - Plugin name: `pgoutput`
-   - Tables included: `public.mc_payments, public.mc_status, public.debezium_heartbeat`
+   - Tables included: `public.mc_payments, public.mc_status ,public.debezium_heartbeat`
    - Decimal handling mode: `string`
    - Heartbeat interval (ms): `240000`
    - Heartbeat action query: `UPDATE debezium_heartbeat set last_heartbeat_ts = now();` 
