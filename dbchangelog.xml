@@ -126,4 +126,33 @@
             tableName="mc_status"
             usePreparedStatements="true"></loadData>
     </changeSet>
+    <changeSet author="cfagaras" id="load-payment-init_3" runAlways="true" runOnChange="true"
+        contextFilter="load-data">
+        <loadData commentLineStartsWith="//"
+            encoding="UTF-8"
+            file="./liquibase_sample_data/payment.csv"
+            quotchar="'"
+            relativeToChangelogFile="false"
+            schemaName="public"
+            separator=","
+            tableName="mc_payments"
+            usePreparedStatements="true"></loadData>
+        <loadData commentLineStartsWith="//"
+            encoding="UTF-8"
+            file="./liquibase_sample_data/status.csv"
+            quotchar="'"
+            relativeToChangelogFile="false"
+            separator=","
+            tableName="mc_status"
+            usePreparedStatements="true"></loadData>
+        <loadUpdateData commentLineStartsWith="//"
+            encoding="UTF-8"
+            file="./liquibase_sample_data/status.csv"
+            quotchar="'"
+            relativeToChangelogFile="false"
+            separator=","
+            tableName="mc_status"
+            primaryKey="correlation_id"
+            usePreparedStatements="true"></loadUpdateData>
+    </changeSet>
 </databaseChangeLog>

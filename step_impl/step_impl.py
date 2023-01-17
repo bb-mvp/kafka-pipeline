@@ -153,7 +153,7 @@ def mc_status_csv(transaction_id, transaction_status):
     print("Status record created in CSV file!")
 
 
-@step("Add <trans_no> transactions in mc_payments and mc_status")
+@step("Add <trans_no> transactions in transaction history")
 def add_5_transactions_in_mc_payments_and_mc_status(trans_no):
     error = None
     try:
@@ -169,5 +169,25 @@ def add_5_transactions_in_mc_payments_and_mc_status(trans_no):
         error = err
     finally:
         assert error is None, error
-        file_cleanup()
-        print("Done!")
+        print("Done")
+
+
+@step(
+    "Add <trans_no> transactions in status Pending in transaction history and update status to Processed after <wait_time> seconds"
+)
+def add_5_transactions_and_update_status(trans_no):
+    error = None
+    try:
+        # while time.time() < t_end:
+        for x in range(int(trans_no)):
+            transaction_id = random_tran_id()
+            mc_payment_csv(transaction_id)
+            mc_status_csv(transaction_id, "0000")
+            print(os.system("sh ./scripts/liquibase_pay_insert.sh"))
+            print("Transaction " + str(x + 1) + " generated!")
+            time.sleep(1)
+    except (Exception, Error) as err:
+        error = err
+    finally:
+        assert error is None, error
+        print("Done")
