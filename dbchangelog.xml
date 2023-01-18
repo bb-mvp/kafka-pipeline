@@ -39,7 +39,7 @@
             <column name="last_heartbeat_ts" value="${now}" />
         </insert>
     </changeSet>
-    <changeSet author="liquibase-docs" id="dropTable-transaction">
+    <changeSet author="cfagaras" id="dropTable-transaction">
         <dropTable cascadeConstraints="true"
             schemaName="public"
             tableName="transaction" />
