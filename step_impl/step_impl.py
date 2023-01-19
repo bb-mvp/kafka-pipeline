@@ -9,6 +9,7 @@ from psycopg2 import Error
 
 PAYMENT_DATA_FILE = "./liquibase_sample_data/payment.csv"
 NEW_STATUS_DATA_FILE = "./liquibase_sample_data/status.csv"
+UPDATE_STATUS_DATA_FILE = "./liquibase_sample_data/status_update.csv"
 
 
 def end_time(duration):
@@ -67,9 +68,8 @@ def random_pay_type():
     return random.choice(types)
 
 
-def mc_payment_csv(transaction_id):
+def mc_payment_csv_header():
 
-    today = datetime.datetime.now
     csv_file_name = PAYMENT_DATA_FILE
 
     # list of fields name for mc_payment
@@ -94,6 +94,21 @@ def mc_payment_csv(transaction_id):
         "TRANSACTION_VALUEDATE",
         "TRANSACTION_DESCRIPTION",
     ]
+
+    # writing to csv file
+    with open(csv_file_name, "w") as csvfile:
+        # creating a csv writer object
+        csvwriter = csv.writer(csvfile)
+        # writing the fields
+        csvwriter.writerow(fields_name)
+
+    print("Header payment CSV file")
+
+
+def mc_payment_csv_row(transaction_id):
+
+    today = datetime.datetime.now
+    csv_file_name = PAYMENT_DATA_FILE
 
     rows = [
         [
@@ -120,11 +135,9 @@ def mc_payment_csv(transaction_id):
     ]
 
     # writing to csv file
-    with open(csv_file_name, "w") as csvfile:
+    with open(csv_file_name, "a") as csvfile:
         # creating a csv writer object
         csvwriter = csv.writer(csvfile)
-        # writing the fields
-        csvwriter.writerow(fields_name)
 
         # writing the data rows
         csvwriter.writerows(rows)
@@ -132,14 +145,12 @@ def mc_payment_csv(transaction_id):
     print("Payment record created in CSV file")
 
 
-def mc_status_csv(transaction_id, transaction_status):
+def mc_status_csv_header():
 
-    today = datetime.datetime.now
     csv_file_name = NEW_STATUS_DATA_FILE
 
     # list of fields name for mc_status
     fields_name = ["DATA_CRE", "CORRELATION_ID", "BRCH", "ERROR_CODE"]
-    rows = [[today(), transaction_id, "4500", transaction_status]]
 
     # writing to csv file
     with open(csv_file_name, "w") as csvfile:
@@ -147,6 +158,56 @@ def mc_status_csv(transaction_id, transaction_status):
         csvwriter = csv.writer(csvfile)
         # writing the fields
         csvwriter.writerow(fields_name)
+
+    print("Status HEADER created in CSV file!")
+
+
+def mc_status_csv_row(transaction_id, transaction_status):
+
+    today = datetime.datetime.now
+    csv_file_name = NEW_STATUS_DATA_FILE
+
+    # list of fields name for mc_status
+    rows = [[today(), transaction_id, "4500", transaction_status]]
+
+    # writing to csv file
+    with open(csv_file_name, "a") as csvfile:
+        # creating a csv writer object
+        csvwriter = csv.writer(csvfile)
+
+        # writing the data rows
+        csvwriter.writerows(rows)
+    print("Status record created in CSV file!")
+
+
+def mc_status_update_csv_header():
+
+    csv_file_name = UPDATE_STATUS_DATA_FILE
+
+    # list of fields name for mc_status
+    fields_name = ["DATA_CRE", "CORRELATION_ID", "BRCH", "ERROR_CODE"]
+
+    # writing to csv file
+    with open(csv_file_name, "w") as csvfile:
+        # creating a csv writer object
+        csvwriter = csv.writer(csvfile)
+        # writing the fields
+        csvwriter.writerow(fields_name)
+
+    print("Status record created in CSV file!")
+
+
+def mc_status_update_csv_row(transaction_id, transaction_status):
+
+    today = datetime.datetime.now
+    csv_file_name = UPDATE_STATUS_DATA_FILE
+
+    rows = [[today(), transaction_id, "4500", transaction_status]]
+
+    # writing to csv file
+    with open(csv_file_name, "a") as csvfile:
+        # creating a csv writer object
+        csvwriter = csv.writer(csvfile)
 
         # writing the data rows
         csvwriter.writerows(rows)
@@ -158,6 +219,8 @@ def file_cleanup():
         os.remove(PAYMENT_DATA_FILE)
     if os.path.exists(NEW_STATUS_DATA_FILE):
         os.remove(NEW_STATUS_DATA_FILE)
+    if os.path.exists(UPDATE_STATUS_DATA_FILE):
+        os.remove(UPDATE_STATUS_DATA_FILE)
     print("File cleanup successfull !")
 
 
@@ -165,14 +228,14 @@ def file_cleanup():
 def add_5_transactions_in_mc_payments_and_mc_status(trans_no):
     error = None
     try:
-        # while time.time() < t_end:
+        mc_payment_csv_header()
+        mc_status_csv_header()
         for x in range(int(trans_no)):
             transaction_id = random_tran_id()
-            mc_payment_csv(transaction_id)
-            mc_status_csv(transaction_id, "0000")
-            os.system("sh ./scripts/liquibase_pay_insert.sh")
+            mc_payment_csv_row(transaction_id)
+            mc_status_csv_row(transaction_id, "0000")
             print("Transaction " + str(x + 1) + " generated!\r\n\r\n")
-            time.sleep(1)
+        os.system("sh ./scripts/liquibase_pay_insert.sh")
     except (Exception, Error) as err:
         error = err
     finally:
@@ -184,19 +247,28 @@ def add_5_transactions_in_mc_payments_and_mc_status(trans_no):
 @step(
     "Add <trans_no> transactions in status Pending in transaction history and update status to Processed after <wait_time> seconds"
 )
-def add_5_transactions_and_update_status(trans_no):
+def add_5_transactions_and_update_status(trans_no, wait_time):
     error = None
     try:
-        # while time.time() < t_end:
-        for x in range(int(trans_no)):
+        mc_payment_csv_header()
+        mc_status_csv_header()
+        mc_status_update_csv_header()
+
+        for _x in range(int(trans_no)):
             transaction_id = random_tran_id()
-            mc_payment_csv(transaction_id)
-            mc_status_csv(transaction_id, "0000")
-            print(os.system("sh ./scripts/liquibase_pay_insert.sh"))
-            print("Transaction " + str(x + 1) + " generated!")
-            time.sleep(1)
+            mc_payment_csv_row(transaction_id)
+            mc_status_csv_row(transaction_id, "0000")
+            mc_status_update_csv_row(transaction_id, "0001")
+            print("Transaction " + str(_x + 1) + " generated!")
+        os.system("sh ./scripts/liquibase_pay_insert.sh")
+        print("Now waiting " + wait_time)
+        time.sleep(int(wait_time))
+        os.system("sh ./scripts/liquibase_pay_update.sh")
+        print("Transactions  updated!")
+
     except (Exception, Error) as err:
         error = err
     finally:
         assert error is None, error
+        # file_cleanup()
         print("Done")

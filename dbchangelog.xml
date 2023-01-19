@@ -126,33 +126,29 @@
             tableName="mc_status"
             usePreparedStatements="true"></loadData>
     </changeSet>
-    <changeSet author="cfagaras" id="load-payment-init_3" runAlways="true" runOnChange="true"
-        contextFilter="load-data">
-        <loadData commentLineStartsWith="//"
-            encoding="UTF-8"
-            file="./liquibase_sample_data/payment.csv"
-            quotchar="'"
-            relativeToChangelogFile="false"
-            schemaName="public"
-            separator=","
-            tableName="mc_payments"
-            usePreparedStatements="true"></loadData>
-        <loadData commentLineStartsWith="//"
-            encoding="UTF-8"
-            file="./liquibase_sample_data/status.csv"
-            quotchar="'"
-            relativeToChangelogFile="false"
-            separator=","
-            tableName="mc_status"
-            usePreparedStatements="true"></loadData>
+    <changeSet author="cfagaras" id="update-transaction-status" runAlways="true" runOnChange="true"
+        contextFilter="load-data-update">
         <loadUpdateData commentLineStartsWith="//"
             encoding="UTF-8"
-            file="./liquibase_sample_data/status.csv"
+            file="./liquibase_sample_data/status_update.csv"
             quotchar="'"
             relativeToChangelogFile="false"
             separator=","
             tableName="mc_status"
             primaryKey="correlation_id"
-            usePreparedStatements="true"></loadUpdateData>
+            onlyUpdate="false"
+            usePreparedStatements="true">
+            <column header="correlation_id"
+                name="correlation_id"
+                type="VARCHAR" /></loadUpdateData>
+    </changeSet>
+    <changeSet author="cfagaras" id="6">
+        <delete schemaName="public"
+            tableName="mc_status"> </delete>
+        <addPrimaryKey columnNames="correlation_id"
+            constraintName="pk_mc_status"
+            schemaName="public"
+            tableName="mc_status"
+            validate="true" />
     </changeSet>
 </databaseChangeLog>
