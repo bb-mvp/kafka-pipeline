@@ -7,9 +7,11 @@ from getgauge.python import step
 import psycopg2
 from psycopg2 import Error
 
-PAYMENT_DATA_FILE = "./liquibase_sample_data/payment.csv"
-NEW_STATUS_DATA_FILE = "./liquibase_sample_data/status.csv"
-UPDATE_STATUS_DATA_FILE = "./liquibase_sample_data/status_update.csv"
+DATA_FOLDER = "./liquibase_sample_data/"
+
+PAYMENT_DATA_FILE = "payment.csv"
+NEW_STATUS_DATA_FILE = "status.csv"
+UPDATE_STATUS_DATA_FILE = "status_update.csv"
 
 
 def end_time(duration):
@@ -70,7 +72,7 @@ def random_pay_type():
 
 def mc_payment_csv_header():
 
-    csv_file_name = PAYMENT_DATA_FILE
+    csv_file_name = DATA_FOLDER + PAYMENT_DATA_FILE
 
     # list of fields name for mc_payment
     fields_name = [
@@ -95,6 +97,11 @@ def mc_payment_csv_header():
         "TRANSACTION_DESCRIPTION",
     ]
 
+    isFolder = os.path.exists(DATA_FOLDER)
+    if not isFolder:
+        # Create a new directory because it does not exist
+        os.makedirs(DATA_FOLDER)
+
     # writing to csv file
     with open(csv_file_name, "w") as csvfile:
         # creating a csv writer object
@@ -108,7 +115,7 @@ def mc_payment_csv_header():
 def mc_payment_csv_row(transaction_id):
 
     today = datetime.datetime.now
-    csv_file_name = PAYMENT_DATA_FILE
+    csv_file_name = DATA_FOLDER + PAYMENT_DATA_FILE
 
     rows = [
         [
@@ -147,10 +154,15 @@ def mc_payment_csv_row(transaction_id):
 
 def mc_status_csv_header():
 
-    csv_file_name = NEW_STATUS_DATA_FILE
+    csv_file_name = DATA_FOLDER + NEW_STATUS_DATA_FILE
 
     # list of fields name for mc_status
     fields_name = ["DATA_CRE", "CORRELATION_ID", "BRCH", "ERROR_CODE"]
+
+    isFolder = os.path.exists(DATA_FOLDER)
+    if not isFolder:
+        # Create a new directory because it does not exist
+        os.makedirs(DATA_FOLDER)
 
     # writing to csv file
     with open(csv_file_name, "w") as csvfile:
@@ -165,7 +177,7 @@ def mc_status_csv_header():
 def mc_status_csv_row(transaction_id, transaction_status):
 
     today = datetime.datetime.now
-    csv_file_name = NEW_STATUS_DATA_FILE
+    csv_file_name = DATA_FOLDER + NEW_STATUS_DATA_FILE
 
     # list of fields name for mc_status
     rows = [[today(), transaction_id, "4500", transaction_status]]
@@ -182,10 +194,15 @@ def mc_status_csv_row(transaction_id, transaction_status):
 
 def mc_status_update_csv_header():
 
-    csv_file_name = UPDATE_STATUS_DATA_FILE
+    csv_file_name = DATA_FOLDER + UPDATE_STATUS_DATA_FILE
 
     # list of fields name for mc_status
     fields_name = ["DATA_CRE", "CORRELATION_ID", "BRCH", "ERROR_CODE"]
+
+    isFolder = os.path.exists(DATA_FOLDER)
+    if not isFolder:
+        # Create a new directory because it does not exist
+        os.makedirs(DATA_FOLDER)
 
     # writing to csv file
     with open(csv_file_name, "w") as csvfile:
@@ -200,7 +217,7 @@ def mc_status_update_csv_header():
 def mc_status_update_csv_row(transaction_id, transaction_status):
 
     today = datetime.datetime.now
-    csv_file_name = UPDATE_STATUS_DATA_FILE
+    csv_file_name = DATA_FOLDER + UPDATE_STATUS_DATA_FILE
 
     rows = [[today(), transaction_id, "4500", transaction_status]]
 
@@ -215,12 +232,12 @@ def mc_status_update_csv_row(transaction_id, transaction_status):
 
 
 def file_cleanup():
-    if os.path.exists(PAYMENT_DATA_FILE):
-        os.remove(PAYMENT_DATA_FILE)
-    if os.path.exists(NEW_STATUS_DATA_FILE):
-        os.remove(NEW_STATUS_DATA_FILE)
-    if os.path.exists(UPDATE_STATUS_DATA_FILE):
-        os.remove(UPDATE_STATUS_DATA_FILE)
+    if os.path.exists(DATA_FOLDER + PAYMENT_DATA_FILE):
+        os.remove(DATA_FOLDER + PAYMENT_DATA_FILE)
+    if os.path.exists(DATA_FOLDER + NEW_STATUS_DATA_FILE):
+        os.remove(DATA_FOLDER + NEW_STATUS_DATA_FILE)
+    if os.path.exists(DATA_FOLDER + UPDATE_STATUS_DATA_FILE):
+        os.remove(DATA_FOLDER + UPDATE_STATUS_DATA_FILE)
     print("File cleanup successfull !")
 
 
@@ -270,5 +287,5 @@ def add_5_transactions_and_update_status(trans_no, wait_time):
         error = err
     finally:
         assert error is None, error
-        # file_cleanup()
+        file_cleanup()
         print("Done")
