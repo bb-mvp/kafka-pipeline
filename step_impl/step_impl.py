@@ -287,5 +287,5 @@ def add_5_transactions_and_update_status(trans_no, wait_time):
         error = err
     finally:
         assert error is None, error
-        file_cleanup()
+        # file_cleanup()
         print("Done")
