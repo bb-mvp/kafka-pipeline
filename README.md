@@ -158,6 +158,10 @@ Background reading: [Postgres CDC Source connector documentation](https://docs.c
 Kafka Stream topic is needed in order to join messages from 2 different topics. 
 In our case those two topics are linked to the tables from Posgresql that mimics the payment solution: `mc_payments` and `mc_status`.
 
+An the end of the setup you will have multiple topics that will take care of different transaction statuses:
+- trans_status_init - topic that provides only the first PENDING status for the transaction history
+- trans_status_ok - topic that provides only the PROCESSED status for transaction history
+
 The steps for having that are:
 1. Navigate to your new cluster on Confluent Cloud
 2. Click on ksqlDB on the left menu:
@@ -176,7 +180,10 @@ The steps for having that are:
    - In order to save the code you should press the "Apply changes". If the button is greyed you should first grant privileges to pipeline. For this there is a button above the coding window.
    - If everything is OK you should see in the top right corner "Activate now" option. Please press it.
 
-Now you have the entire pipeline up and running and you should see in the topic" transactions" the joined transactions.
+Now you have the entire pipeline up and running and you should see in the topic tab the following topics:
+  - transactions - all the records for transaction history
+  - trans_status_init - the initial occurence of transaction status history: PENDING
+  - trans_status_ok - the final status for the transactions: PROCESSED
 
 
 
@@ -187,8 +194,10 @@ This is very straightforward:
 
 1. [Add example bank transactions to your AWS database](#add-example-bank-transactions-into-your-aws-database-via-the-github-actions-workflow)
 2. On Confluent Cloud, navigate to your cluster and click on "Topics" on the left menu
-3. You will see that a `<your-prefix>.public.transaction` topic has been added
-4. If you click on the topic and then the "Messages" tab, you can see the messages by specifying the
+3.  `transaction` topic has been added
+4.  `trans_status_init` topic has been added
+5.  `trans_status_ok` topic has been added
+6. If you click on the topic and then the "Messages" tab, you can see the messages by specifying the
    offset as `0 / Partition: 0`
 
    Also, if you then kick off another GitHub Actions workflow run to add more bank transactions to your
