@@ -39,7 +39,7 @@
             <column name="last_heartbeat_ts" value="${now}" />
         </insert>
     </changeSet>
-    <changeSet author="cfagaras" id="dropTable-transaction">
+    <changeSet author="liquibase-docs" id="dropTable-transaction">
         <dropTable cascadeConstraints="true"
             schemaName="public"
             tableName="transaction" />
@@ -125,5 +125,30 @@
             separator=","
             tableName="mc_status"
             usePreparedStatements="true"></loadData>
+    </changeSet>
+    <changeSet author="cfagaras" id="update-transaction-status" runAlways="true" runOnChange="true"
+        contextFilter="load-data-update">
+        <loadUpdateData commentLineStartsWith="//"
+            encoding="UTF-8"
+            file="./liquibase_sample_data/status_update.csv"
+            quotchar="'"
+            relativeToChangelogFile="false"
+            separator=","
+            tableName="mc_status"
+            primaryKey="correlation_id"
+            onlyUpdate="false"
+            usePreparedStatements="true">
+            <column header="correlation_id"
+                name="correlation_id"
+                type="VARCHAR" /></loadUpdateData>
+    </changeSet>
+    <changeSet author="cfagaras" id="6">
+        <delete schemaName="public"
+            tableName="mc_status"> </delete>
+        <addPrimaryKey columnNames="correlation_id"
+            constraintName="pk_mc_status"
+            schemaName="public"
+            tableName="mc_status"
+            validate="true" />
     </changeSet>
 </databaseChangeLog>
